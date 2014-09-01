@@ -1,8 +1,10 @@
 package com.example.kyle.sunshine;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +47,15 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        String location = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+
+        new FetchWeatherTask().execute(location);
+
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
        inflater.inflate(R.menu.forecastfragment, menu);
@@ -55,7 +66,11 @@ public class ForecastFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute("Stellenbosch");
+
+            String location = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+            String unitsPreference = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+            new FetchWeatherTask().execute(location);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -68,21 +83,24 @@ public class ForecastFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ArrayList<String> fakeData = new ArrayList<String>();
 
-        Toast.makeText(this.getActivity(), "TEST", Toast.LENGTH_LONG);
 
-        fakeData.add("Today-Kak Weather-10/15 (rain)");
-        fakeData.add("Tomrrow-Semi-Kak Weather-15/16");
-        fakeData.add("Thursday-Kak Weather-9/10 (windy)");
-        fakeData.add("Friday-Mooi Weather-23/30");
-        fakeData.add("Saturday-Okay Weather-15/20 ");
-        fakeData.add("Sunday-Okay Weather-18/19 (cloudy)");
-
-        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, fakeData);
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                detailIntent.putExtra(Intent.EXTRA_TEXT, mForecastAdapter.getItem(i));
+
+                startActivity(detailIntent);
+            }
+        });
+
+
+
         return rootView;
     }
 
@@ -111,10 +129,14 @@ public class ForecastFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
+
+
+                String unitsPreference = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+
                 Uri weatherUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, "json")
-                        .appendQueryParameter(UNITS_PARAM, "metric")
+                        .appendQueryParameter(UNITS_PARAM, unitsPreference)
                         .appendQueryParameter(DAYS_PARAM, "7")
                         .build();
 
