@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.capetown.kyletightest.leaderboard" >
 
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -10,12 +14,36 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
+
+        </activity>
+        <activity android:name=".LoginActivity"
+            android:label="LeaderBoard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+
+            </activity>
+
+        <receiver android:name=".ChallengeAutoStart">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".SendChallengeService"
+            android:exported="true"/>
+
+        <service
+            android:name=".ChallengeService"
+            android:exported="true"/>
+
+        <provider
+            android:authorities="com.capetown.kyletightest.leaderboard"
+            android:name=".data.UserProvider" />
     </application>
+
 
 </manifest>

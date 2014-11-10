@@ -3,4 +3,5 @@
 <resources>
     <color name="background_grey">#292929</color>
     <color name="item_pressed">#494949</color>
+    <color name="base_gold">#ccaa00</color>
 </resources>

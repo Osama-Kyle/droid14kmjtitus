@@ -4,5 +4,15 @@
     <string name="app_name">LeaderBoard</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="Rivals">Rivals</string>
+    <string name="Feeds">Feeds</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="unsuccessful_login_password">1</string>
+    <string name="unsuccessful_login_username">2</string>
+
+    <string-array name="game_array">
+        <item>Fifa</item>
+        <item>Table Tennis</item>
+    </string-array>
 
 </resources>
