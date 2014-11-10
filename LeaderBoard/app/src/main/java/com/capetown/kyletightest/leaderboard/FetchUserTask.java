@@ -42,15 +42,6 @@ public class FetchUserTask extends AsyncTask <String, Void, Void>{
         mUserAdapter = forecastAdapter;
     }
 
-    private void addChallenge(String id1, String id2, String game_id) {
-
-        Log.v(LOG_TAG, "inserting challenge: " + id1 + " " + id2 + " " + game_id);
-
-        //TODO
-
-
-    }
-
 
     @Override
     protected Void doInBackground(String... params) {
@@ -135,7 +126,6 @@ public class FetchUserTask extends AsyncTask <String, Void, Void>{
             for(String dayForecastStr : split) {
                 mUserAdapter.add(dayForecastStr);
             }
-            // New data is back from the server.  Hooray!
         }
     }
 

@@ -48,7 +48,6 @@ public class ChallengeService extends Service {
             stopSelf();
         }
 
-
         Thread t = new Thread() {
             public void run() {
                 HttpURLConnection urlConnection = null;
@@ -136,8 +135,6 @@ public class ChallengeService extends Service {
                         }
                     });
 
-                    challenge_request = true;
-
 
                 }
 
@@ -160,9 +157,6 @@ public class ChallengeService extends Service {
 
     @Override
     public void onDestroy() {
-        // I want to restart this service again in one hour
-        if (!challenge_request) {
-
 
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarm.set(
@@ -170,6 +164,5 @@ public class ChallengeService extends Service {
                     System.currentTimeMillis() + (7000),
                     PendingIntent.getService(this, 0, new Intent(this, ChallengeService.class), 0)
             );
-        }
     }
 }
